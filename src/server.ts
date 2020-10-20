@@ -6,6 +6,7 @@ import * as nunjucks from "nunjucks";
 import * as platformsController from "./controllers/platforms.controller";
 import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
+
 import bodyParser from "body-parser";
 import cors from "cors";
 
