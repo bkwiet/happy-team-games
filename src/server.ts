@@ -1,11 +1,14 @@
-import { Db } from "mongodb";
+import { MongoClient } from "mongodb";
 import * as core from "express-serve-static-core";
 import express from "express";
+import session from "express-session";
+import mongoSession from "connect-mongo";
 import * as gamesController from "./controllers/games.controller";
 import * as nunjucks from "nunjucks";
 import * as platformsController from "./controllers/platforms.controller";
 import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
+
 import bodyParser from "body-parser";
 import cors from "cors";
 
@@ -14,7 +17,7 @@ const clientWantsJson = (request: express.Request): boolean => request.get("acce
 const jsonParser = bodyParser.json();
 const formParser = bodyParser.urlencoded({ extended: true });
 
-export function makeApp(db: Db): core.Express {
+export function makeApp(mongoClient: MongoClient): core.Express {
   const app = express();
 
   nunjucks.configure("views", {
@@ -26,8 +29,27 @@ export function makeApp(db: Db): core.Express {
   app.set("view engine", "njk");
   app.use(cors());
 
-  const platformModel = new PlatformModel(db.collection<Platform>("platforms"));
-  const gameModel = new GameModel(db.collection<Game>("games"));
+  const mongoStore = mongoSession(session);
+  if (process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+  }
+
+  const sessionParser = session({
+    secret: "Session ID generated",
+    name: "session_id",
+    resave: false,
+    saveUninitialized: true,
+    store: new mongoStore({
+      client: mongoClient,
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(Date.now() + 3600000),
+    },
+  });
+
+  const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
+  const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
 
   app.get("/", (_request, response) => response.render("pages/home"));
   app.get("/api", (_request, response) => response.render("pages/api"));
