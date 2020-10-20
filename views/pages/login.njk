@@ -1,0 +1,9 @@
+{% extends "layout/index.njk" %}
+
+{% block beforeContainer %}
+  {% include "components/banner.njk" %}
+{% endblock %}
+
+{% block content %}
+  <a role="button" class="btn btn-danger" href="{{ urlAuth }}"> Do you want to log ?</a>
+{% endblock %}

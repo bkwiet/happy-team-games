@@ -10,11 +10,13 @@ import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
 import bodyParser from "body-parser";
 import cors from "cors";
+import { oauthClient } from "./controllers/login.controller";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
 const jsonParser = bodyParser.json();
 const formParser = bodyParser.urlencoded({ extended: true });
+const session_secret = process.env.SESSIONSECRET || "";
 
 export function makeApp(mongoClient: MongoClient): core.Express {
   const app = express();
@@ -34,7 +36,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   }
 
   const sessionParser = session({
-    secret: "Session ID generated",
+    secret: session_secret,
     name: "session_id",
     resave: false,
     saveUninitialized: true,
@@ -52,6 +54,24 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   app.get("/", (_request, response) => response.render("pages/home"));
   app.get("/api", (_request, response) => response.render("pages/api"));
+  app.get("/login", async (_request, response) => {
+    const urlAuth = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
+    response.render("pages/login", { urlAuth });
+  });
+
+  app.get("/oauth/callback", sessionParser, (_request, response) => {
+    const queryCode = String(_request.query.code);
+    oauthClient
+      .getTokensFromAuthorizationCode(queryCode)
+      .then((token) => {
+        if (_request.session) {
+          _request.session.accessToken = token.access_token;
+        }
+        console.log(_request.session);
+        response.redirect("/");
+      })
+      .catch((error) => console.log(error));
+  });
 
   app.get("/platforms", platformsController.index(platformModel));
   app.get("/platforms/new", platformsController.newPlatform());
