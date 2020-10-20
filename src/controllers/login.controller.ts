@@ -6,12 +6,11 @@ const name = process.env.NAME || "";
 const jwt = process.env.JWALGORITHM || "";
 
 const oauthClientConstructorProps: OAuth2ClientConstructor = {
-  openIDConfigurationURL: "***",
+  openIDConfigurationURL: "https://fewlines.connect.prod.fewlines.tech/.well-known/openid-configuration",
   clientID: client_id,
-  clientSecret: client_secret
-  redirectURI: "***",
+  clientSecret: client_secret,
+  redirectURL: "***",
   audience: "***",
   scopes: ["***", "***"],
 };
-
-oauth2.
+const oauthClient = new OAuth2Client(oauthClientConstructorProps);
