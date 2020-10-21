@@ -13,6 +13,7 @@ import PlatformModel, { Platform } from "./models/platformModel";
 import bodyParser from "body-parser";
 import * as connection from "./controllers/connection.controller";
 import { v4 as uuidv4 } from "uuid";
+import { env } from "process";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
@@ -60,10 +61,14 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
   const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
 
-  app.get("/", (_request, response) => response.render("pages/home"));
-  app.get("/api", (_request, response) => response.render("pages/api"));
-  app.get("/login", connection.connect());
-  app.get("/logout", connection.logout());
+  app.get("/", sessionParser, (request, response) =>
+    response.render("pages/home", { access: connection.checkAccess(request) }),
+  );
+  app.get("/api", sessionParser, (request, response) =>
+    response.render("pages/api", { access: connection.checkAccess(request) }),
+  );
+  app.get("/login", sessionParser, connection.connect());
+  app.get("/logout", sessionParser, connection.logout());
   app.get("/oauth/callback", sessionParser, connection.callback());
 
   app.get("/platforms", sessionParser, platformsController.index(platformModel));
@@ -96,7 +101,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
     connection.checkLoginStatus(platformsController.destroy(platformModel)),
   );
 
-  app.get("/platforms/:slug/games", gamesController.list(gameModel));
+  app.get("/platforms/:slug/games", sessionParser, gamesController.list(gameModel));
   app.get("/games", sessionParser, gamesController.index(gameModel));
   app.get("/games/new", gamesController.newGame());
   app.get("/games/:slug", sessionParser, gamesController.show(gameModel));
@@ -127,12 +132,12 @@ export function makeApp(mongoClient: MongoClient): core.Express {
     connection.checkLoginStatus(gamesController.destroy(gameModel)),
   );
 
-  app.get("/*", (request, response) => {
+  app.get("/*", sessionParser, (request, response) => {
     console.log(request.path);
     if (clientWantsJson(request)) {
       response.status(404).json({ error: "Not Found" });
     } else {
-      response.status(404).render("pages/not-found");
+      response.status(404).render("pages/not-found", { access: connection.checkAccess(request) });
     }
   });
 

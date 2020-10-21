@@ -19,7 +19,8 @@ export function index(platformModel: PlatformModel) {
 
 export function newPlatform() {
   return async (request: Request, response: Response): Promise<void> => {
-    response.render("platforms/new", { action: "/platforms", callToAction: "Create" });
+    const access = checkAccess(request);
+    response.render("platforms/new", { action: "/platforms", callToAction: "Create", access });
   };
 }
 
@@ -38,7 +39,8 @@ export function show(platformModel: PlatformModel) {
       if (clientWantsJson(request)) {
         response.json({ error: "This platform does not exist." });
       } else {
-        response.status(404).render("pages/not-found");
+        const access = checkAccess(request);
+        response.status(404).render("pages/not-found", { access });
       }
     }
   };
@@ -48,10 +50,17 @@ export function edit(platformModel: PlatformModel) {
   return async (request: Request, response: Response): Promise<void> => {
     const platform = await platformModel.findBySlug(request.params.slug);
     if (platform) {
-      response.render("platforms/edit", { platform, action: `/platforms/${platform.slug}`, callToAction: "Save" });
+      const access = checkAccess(request);
+      response.render("platforms/edit", {
+        platform,
+        action: `/platforms/${platform.slug}`,
+        callToAction: "Save",
+        access,
+      });
     } else {
       response.status(404);
-      response.status(404).render("pages/not-found");
+      const access = checkAccess(request);
+      response.status(404).render("pages/not-found", { access });
     }
   };
 }

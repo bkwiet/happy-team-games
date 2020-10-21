@@ -20,7 +20,8 @@ export function index(gameModel: GameModel) {
 
 export function newGame() {
   return async (request: Request, response: Response): Promise<void> => {
-    response.render("games/new", { action: "/games", callToAction: "Create" });
+    const access = checkAccess(request);
+    response.render("games/new", { action: "/games", callToAction: "Create", access });
   };
 }
 
@@ -41,7 +42,8 @@ export function show(gameModel: GameModel) {
       if (clientWantsJson(request)) {
         response.json({ error: "This game does not exist." });
       } else {
-        response.status(404).render("pages/not-found");
+        const access = checkAccess(request);
+        response.status(404).render("pages/not-found", { access });
       }
     }
   };
@@ -53,7 +55,8 @@ export function list(gameModel: GameModel) {
     if (clientWantsJson(request)) {
       response.json(games);
     } else {
-      response.render("games/index", { games });
+      const access = checkAccess(request);
+      response.render("games/index", { games, access });
     }
   };
 }
@@ -102,10 +105,12 @@ export function edit(gameModel: GameModel) {
   return async (request: Request, response: Response): Promise<void> => {
     const game = await gameModel.findBySlug(request.params.slug);
     if (game) {
-      response.render("games/edit", { game, action: `/games/${game.slug}`, callToAction: "Save" });
+      const access = checkAccess(request);
+      response.render("games/edit", { game, action: `/games/${game.slug}`, callToAction: "Save", access });
     } else {
+      const access = checkAccess(request);
       response.status(404);
-      response.status(404).render("pages/not-found");
+      response.status(404).render("pages/not-found", { access });
     }
   };
 }

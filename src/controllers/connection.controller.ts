@@ -4,17 +4,19 @@ import { Request, Response } from "express";
 
 dotenv.config();
 
-const client_id = process.env.CLIENTID || "";
-const client_secret = process.env.CLIENTSECRET || "";
+const open_id = process.env.OPEN_ID || "";
+const client_id = process.env.CLIENT_ID || "";
+const client_secret = process.env.CLIENT_SECRET || "";
 const audience = process.env.AUDIENCE || "";
+const oauth_callback_url = process.env.OAUTH_CALLBACK_URL || "";
 const name = process.env.NAME || "";
-const jwt_algo = process.env.JWALGORITHM || "";
+const jwt_algo = process.env.JWT_ALGORITHM || "";
 
 const oauthClientConstructorProps: OAuth2ClientConstructor = {
-  openIDConfigurationURL: "https://fewlines.connect.prod.fewlines.tech/.well-known/openid-configuration",
+  openIDConfigurationURL: open_id,
   clientID: client_id,
   clientSecret: client_secret,
-  redirectURI: "http://localhost:8080/oauth/callback",
+  redirectURI: oauth_callback_url,
   audience: audience,
   scopes: ["openid", "email", "phone"],
 };
@@ -23,8 +25,8 @@ export const oauthClient = new OAuth2Client(oauthClientConstructorProps);
 
 export function connect() {
   return async (request: Request, response: Response): Promise<void> => {
-    const urlAuth = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
-    response.render("pages/login", { urlAuth });
+    const oauth_URL = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
+    response.render("pages/login", { oauth_URL });
   };
 }
 
@@ -39,7 +41,6 @@ export function callback() {
         console.log(token.id_token);
         if (request.session) {
           request.session.accessToken = token.access_token;
-          // request.session.accessToken = decodedToken;
         }
         console.log(request.session);
         response.redirect("/");
@@ -55,7 +56,6 @@ export function callback() {
 export function checkLoginStatus(callback: (request: Request, response: Response) => Promise<void>) {
   return async (request: Request, response: Response): Promise<void> => {
     if (!request.session || !request.session.accessToken) {
-      // Can't find the session
       response.redirect("/login");
       return;
     }
