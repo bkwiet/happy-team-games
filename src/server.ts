@@ -1,22 +1,27 @@
 import { MongoClient } from "mongodb";
+import mongoSession from "connect-mongo";
+import * as dotenv from "dotenv";
+import cors from "cors";
 import * as core from "express-serve-static-core";
 import express from "express";
 import session from "express-session";
-import mongoSession from "connect-mongo";
+// import helmet from "helmet";
 import * as gamesController from "./controllers/games.controller";
 import * as nunjucks from "nunjucks";
 import * as platformsController from "./controllers/platforms.controller";
 import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
 import bodyParser from "body-parser";
-import cors from "cors";
 import { oauthClient } from "./controllers/login.controller";
+import { v4 as uuidv4, v4 } from "uuid";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
 const jsonParser = bodyParser.json();
 const formParser = bodyParser.urlencoded({ extended: true });
 const session_secret = process.env.SESSIONSECRET || "";
+
+dotenv.config();
 
 export function makeApp(mongoClient: MongoClient): core.Express {
   const app = express();
@@ -26,11 +31,14 @@ export function makeApp(mongoClient: MongoClient): core.Express {
     express: app,
   });
 
+  app.disable("x-powered-by");
   app.use("/assets", express.static("public"));
-  app.set("view engine", "njk");
   app.use(cors());
+  // app.use(helmet());
+  app.set("view engine", "njk");
 
   const mongoStore = mongoSession(session);
+
   if (process.env.NODE_ENV === "production") {
     app.set("trust proxy", 1);
   }
@@ -38,6 +46,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   const sessionParser = session({
     secret: session_secret,
     name: "session_id",
+    genid: () => v4(),
     resave: false,
     saveUninitialized: true,
     store: new mongoStore({

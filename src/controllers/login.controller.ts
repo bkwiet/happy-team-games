@@ -27,7 +27,7 @@ const oauthClientConstructorProps: OAuth2ClientConstructor = {
   clientSecret: client_secret,
   redirectURI: "http://localhost:8080/oauth/callback",
   audience: audience,
-  scopes: ["openid", "email"],
+  scopes: ["openid", "email", "phone"],
 };
 
 export const oauthClient = new OAuth2Client(oauthClientConstructorProps);
