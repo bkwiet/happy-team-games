@@ -5,20 +5,20 @@ import cors from "cors";
 import * as core from "express-serve-static-core";
 import express from "express";
 import session from "express-session";
-// import helmet from "helmet";
 import * as gamesController from "./controllers/games.controller";
 import * as nunjucks from "nunjucks";
 import * as platformsController from "./controllers/platforms.controller";
 import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
 import bodyParser from "body-parser";
-import { oauthClient } from "./controllers/login.controller";
-import { v4 as uuidv4, v4 } from "uuid";
+import * as connection from "./controllers/connection.controller";
+import { v4 as uuidv4 } from "uuid";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
 const jsonParser = bodyParser.json();
 const formParser = bodyParser.urlencoded({ extended: true });
+
 const session_secret = process.env.SESSIONSECRET || "";
 
 dotenv.config();
@@ -34,7 +34,6 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   app.disable("x-powered-by");
   app.use("/assets", express.static("public"));
   app.use(cors());
-  // app.use(helmet());
   app.set("view engine", "njk");
 
   const mongoStore = mongoSession(session);
@@ -45,8 +44,8 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   const sessionParser = session({
     secret: session_secret,
-    name: "session_id",
-    genid: () => v4(),
+    name: "happy_tg_sessionID",
+    genid: () => uuidv4(),
     resave: false,
     saveUninitialized: true,
     store: new mongoStore({
@@ -63,24 +62,8 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   app.get("/", (_request, response) => response.render("pages/home"));
   app.get("/api", (_request, response) => response.render("pages/api"));
-  app.get("/login", async (_request, response) => {
-    const urlAuth = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
-    response.render("pages/login", { urlAuth });
-  });
-
-  app.get("/oauth/callback", sessionParser, (_request, response) => {
-    const queryCode = String(_request.query.code);
-    oauthClient
-      .getTokensFromAuthorizationCode(queryCode)
-      .then((token) => {
-        if (_request.session) {
-          _request.session.accessToken = token.access_token;
-        }
-        console.log(_request.session);
-        response.redirect("/");
-      })
-      .catch((error) => console.log(error));
-  });
+  app.get("/login", connection.signIn());
+  app.get("/oauth/callback", sessionParser, connection.connect());
 
   app.get("/platforms", platformsController.index(platformModel));
   app.get("/platforms/new", platformsController.newPlatform());
