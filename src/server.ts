@@ -66,24 +66,66 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   app.get("/logout", connection.logout());
   app.get("/oauth/callback", sessionParser, connection.callback());
 
-  app.get("/platforms", platformsController.index(platformModel));
+  app.get("/platforms", sessionParser, platformsController.index(platformModel));
   app.get("/platforms/new", sessionParser, connection.checkLoginStatus(platformsController.newPlatform()));
-  app.get("/platforms/:slug", platformsController.show(platformModel));
+  app.get("/platforms/:slug", sessionParser, platformsController.show(platformModel));
   app.get("/platforms/:slug/edit", sessionParser, connection.checkLoginStatus(platformsController.edit(platformModel)));
-  app.post("/platforms", jsonParser, formParser, platformsController.create(platformModel));
-  app.put("/platforms/:slug", jsonParser, platformsController.update(platformModel));
-  app.post("/platforms/:slug", formParser, platformsController.update(platformModel));
-  app.delete("/platforms/:slug", jsonParser, platformsController.destroy(platformModel));
+  app.post(
+    "/platforms",
+    jsonParser,
+    formParser,
+    sessionParser,
+    connection.checkLoginStatus(platformsController.create(platformModel)),
+  );
+  app.put(
+    "/platforms/:slug",
+    jsonParser,
+    sessionParser,
+    connection.checkLoginStatus(platformsController.update(platformModel)),
+  );
+  app.post(
+    "/platforms/:slug",
+    formParser,
+    sessionParser,
+    connection.checkLoginStatus(platformsController.update(platformModel)),
+  );
+  app.delete(
+    "/platforms/:slug",
+    jsonParser,
+    sessionParser,
+    connection.checkLoginStatus(platformsController.destroy(platformModel)),
+  );
 
   app.get("/platforms/:slug/games", gamesController.list(gameModel));
-  app.get("/games", gamesController.index(gameModel));
+  app.get("/games", sessionParser, gamesController.index(gameModel));
   app.get("/games/new", gamesController.newGame());
-  app.get("/games/:slug", gamesController.show(gameModel));
-  app.get("/games/:slug/edit", gamesController.edit(gameModel));
-  app.post("/games", jsonParser, formParser, gamesController.create(gameModel, platformModel));
-  app.put("/games/:slug", jsonParser, gamesController.update(gameModel, platformModel));
-  app.post("/games/:slug", formParser, gamesController.update(gameModel, platformModel));
-  app.delete("/games/:slug", jsonParser, gamesController.destroy(gameModel));
+  app.get("/games/:slug", sessionParser, gamesController.show(gameModel));
+  app.get("/games/:slug/edit", sessionParser, connection.checkLoginStatus(gamesController.edit(gameModel)));
+  app.post(
+    "/games",
+    jsonParser,
+    formParser,
+    sessionParser,
+    connection.checkLoginStatus(gamesController.create(gameModel, platformModel)),
+  );
+  app.put(
+    "/games/:slug",
+    jsonParser,
+    sessionParser,
+    connection.checkLoginStatus(gamesController.update(gameModel, platformModel)),
+  );
+  app.post(
+    "/games/:slug",
+    formParser,
+    sessionParser,
+    connection.checkLoginStatus(gamesController.update(gameModel, platformModel)),
+  );
+  app.delete(
+    "/games/:slug",
+    jsonParser,
+    sessionParser,
+    connection.checkLoginStatus(gamesController.destroy(gameModel)),
+  );
 
   app.get("/*", (request, response) => {
     console.log(request.path);

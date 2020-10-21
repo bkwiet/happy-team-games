@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import PlatformModel from "../models/platformModel";
 import slugify from "slug";
+import { checkAccess } from "./connection.controller";
 
 const clientWantsJson = (request: Request): boolean => request.get("accept") === "application/json";
 
@@ -10,7 +11,8 @@ export function index(platformModel: PlatformModel) {
     if (clientWantsJson(request)) {
       response.json(platforms);
     } else {
-      response.render("platforms/index", { platforms });
+      const access = checkAccess(request);
+      response.render("platforms/index", { platforms, access });
     }
   };
 }
@@ -28,7 +30,8 @@ export function show(platformModel: PlatformModel) {
       if (clientWantsJson(request)) {
         response.json(platform);
       } else {
-        response.render("platforms/show", { platform });
+        const access = checkAccess(request);
+        response.render("platforms/show", { platform, access });
       }
     } else {
       response.status(404);

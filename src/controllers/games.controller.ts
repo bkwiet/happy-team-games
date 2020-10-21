@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import PlatformModel from "../models/platformModel";
 import slugify from "slug";
 import GameModel from "../models/gameModel";
+import { checkAccess } from "./connection.controller";
 
 const clientWantsJson = (request: Request): boolean => request.get("accept") === "application/json";
 
@@ -11,7 +12,8 @@ export function index(gameModel: GameModel) {
     if (clientWantsJson(request)) {
       response.json(games);
     } else {
-      response.render("games/index", { games });
+      const access = checkAccess(request);
+      response.render("games/index", { games, access });
     }
   };
 }
@@ -30,7 +32,9 @@ export function show(gameModel: GameModel) {
         response.json(game);
       } else {
         game.first_release_date = new Date((game.first_release_date as number) * 1000).getTime();
-        response.render("games/show", { game });
+
+        const access = checkAccess(request);
+        response.render("games/show", { game, access });
       }
     } else {
       response.status(404);

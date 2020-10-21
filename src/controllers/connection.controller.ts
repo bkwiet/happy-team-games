@@ -63,6 +63,13 @@ export function checkLoginStatus(callback: (request: Request, response: Response
   };
 }
 
+export function checkAccess(request: Request): boolean {
+  if (!request.session || !request.session.accessToken) {
+    return false;
+  }
+  return true;
+}
+
 // export function refreshLoginStatus() {}
 
 export function logout() {
