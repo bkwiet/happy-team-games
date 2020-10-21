@@ -62,13 +62,14 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   app.get("/", (_request, response) => response.render("pages/home"));
   app.get("/api", (_request, response) => response.render("pages/api"));
-  app.get("/login", connection.signIn());
-  app.get("/oauth/callback", sessionParser, connection.connect());
+  app.get("/login", connection.connect());
+  app.get("/logout", connection.logout());
+  app.get("/oauth/callback", sessionParser, connection.callback());
 
   app.get("/platforms", platformsController.index(platformModel));
-  app.get("/platforms/new", platformsController.newPlatform());
+  app.get("/platforms/new", sessionParser, connection.checkLoginStatus(platformsController.newPlatform()));
   app.get("/platforms/:slug", platformsController.show(platformModel));
-  app.get("/platforms/:slug/edit", platformsController.edit(platformModel));
+  app.get("/platforms/:slug/edit", sessionParser, connection.checkLoginStatus(platformsController.edit(platformModel)));
   app.post("/platforms", jsonParser, formParser, platformsController.create(platformModel));
   app.put("/platforms/:slug", jsonParser, platformsController.update(platformModel));
   app.post("/platforms/:slug", formParser, platformsController.update(platformModel));
