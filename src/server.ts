@@ -3,8 +3,8 @@ import * as core from "express-serve-static-core";
 import express from "express";
 import session from "express-session";
 import mongoSession from "connect-mongo";
-import * as gamesController from "./controllers/games.controller";
 import * as nunjucks from "nunjucks";
+import * as gamesController from "./controllers/games.controller";
 import * as platformsController from "./controllers/platforms.controller";
 import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
@@ -51,6 +51,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
   const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
+  //const panierModel = new PanierModel.collection("panier");
 
   app.get("/", (_request, response) => response.render("pages/home"));
   app.get("/api", (_request, response) => response.render("pages/api"));
@@ -91,6 +92,8 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   app.put("/games/:slug", jsonParser, gamesController.update(gameModel, platformModel));
   app.post("/games/:slug", formParser, gamesController.update(gameModel, platformModel));
   app.delete("/games/:slug", jsonParser, gamesController.destroy(gameModel));
+
+  app.post("/platformsPanierIndex", jsonParser, formParser, platformsController.addPanierIndex(platformModel));
 
   app.get("/*", (request, response) => {
     console.log(request.path);

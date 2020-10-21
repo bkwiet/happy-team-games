@@ -153,3 +153,14 @@ export function destroy(platformModel: PlatformModel) {
     }
   };
 }
+
+export function addPanierIndex(platformModel: PlatformModel) {
+  return async (request: Request, response: Response): Promise<void> => {
+    console.log(request.body);
+    const slug = request.body.slug;
+    const price = request.body.price;
+    console.log("ajout ligne panier ", slug, " au de prix de ", price);
+    //const platform = await platformModel.findBySlug(request.params.slug);
+    response.redirect("/platforms");
+  };
+}

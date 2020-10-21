@@ -18,6 +18,7 @@ type PlatformGame = {
     width: number;
     height: number;
   };
+  price: number;
 };
 
 type GameWithPlatforms = {
@@ -39,6 +40,7 @@ const transformGame = (game: GameData): GameWithPlatforms => {
         name: platform.name,
         slug: platform.slug,
         platform_logo: platform.platform_logo,
+        price: platform.price,
       });
     }
   });
@@ -60,6 +62,7 @@ const transformPlatform = (platform: PlatformData): PlatformWithGames => {
         slug: game.slug,
         cover: game.cover,
         name: game.name,
+        price: game.price,
       };
     }),
   };
