@@ -29,3 +29,23 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.bg-dark {
+  background-color: #0000008a !important;
+}
+
+.btn-index {
+  background-color: rgb(0 0 0 / 82%);
+  color: rgb(224 223 223);
+  height: 15rem;
+  width: 15rem;
+  border: 1px solid #93939e;
+  font-weight: bold;
+}
+a.btn.btn-index {
+  padding-top: 6rem;
+}
+a.btn.btn-index:hover {
+  color: rgb(193 7 7);
+  background: rgb(30 31 30 / 83%);
+}

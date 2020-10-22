@@ -1,5 +1,5 @@
 import { Collection, ObjectId } from "mongodb";
-import GameModel, { Game } from "./gameModel";
+import { Game } from "./gameModel";
 
 type user = {
   id: string;
