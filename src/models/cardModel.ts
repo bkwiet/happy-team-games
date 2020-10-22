@@ -1,15 +1,20 @@
-import { ObjectId } from "mongodb";
+// import { Collection, ObjectId } from "mongodb";
+// import { Platform } from "./platformModel";
+// import { Game } from "./gameModel";
 
-import { Collection, ObjectId } from "mongodb";
-import { Platform } from "./platformModel";
-import { Game } from "./gameModel";
+// export type CardInput = {
+//   product?: Game[] | Platform[];
+// };
 
-export type CardInput = {
-  product?: Game[] | Platform[];
-};
+// export type Card = CardInput & {
+//   _id: ObjectId;
+// };
 
-export type Card = CardInput & {
-  _id: ObjectId;
-};
+// export default class Card {
+//   private collection: Collection;
+//   constructor(collection: Collection) {
+//     this.collection = collection;
+//   }
 
-export default class Card {}
+//   insertProduct(sub: string): Promise<card> {}
+// }
