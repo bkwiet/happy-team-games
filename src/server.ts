@@ -13,7 +13,6 @@ import PlatformModel, { Platform } from "./models/platformModel";
 import bodyParser from "body-parser";
 import * as connection from "./controllers/connection.controller";
 import { v4 as uuidv4 } from "uuid";
-import { env } from "process";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 let access = false;
