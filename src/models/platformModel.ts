@@ -40,6 +40,12 @@ export type Platform = PlatformInput & {
 };
 
 export default class PlatformModel {
+  findOne(_id: ObjectId) {
+    throw new Error("Method not implemented.");
+  }
+  find(_id: ObjectId) {
+    throw new Error("Method not implemented.");
+  }
   private collection: Collection;
 
   constructor(collection: Collection) {
