@@ -59,7 +59,12 @@ export function checkLoginStatus(callback: (request: Request, response: Response
       response.redirect("/login");
       return;
     }
-    callback(request, response);
+    try {
+      await oauthClient.verifyJWT(request.session.accessToken, jwt_algo);
+      callback(request, response);
+    } catch {
+      response.redirect("/login");
+    }
   };
 }
 
