@@ -9,7 +9,7 @@ const client_id = process.env.CLIENT_ID || "";
 const client_secret = process.env.CLIENT_SECRET || "";
 const audience = process.env.AUDIENCE || "";
 const oauth_callback_url = process.env.OAUTH_CALLBACK_URL || "";
-const name = process.env.NAME || "";
+//const name = process.env.NAME || "";
 const jwt_algo = process.env.JWT_ALGORITHM || "";
 
 const oauthClientConstructorProps: OAuth2ClientConstructor = {
