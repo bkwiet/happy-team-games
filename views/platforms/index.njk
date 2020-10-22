@@ -14,9 +14,13 @@
       <div class="col">
         <h1>Platforms</h1>
       </div>
-      <div class="col text-right">
-        <a href="/platforms/new" class="btn btn-success btn-lg">Create a Platform</a>
-      </div>
+      
+      {% if access %}     
+        <div class="col text-right">
+          <a href="/platforms/new" class="btn btn-success btn-lg">Create a Platform</a>
+        </div>
+      {% endif %}
+
     </div>
   </div>
   <div class="platforms-list row">

@@ -1,9 +1,57 @@
 {% extends "layout/index.njk" %}
 
-{% block beforeContainer %}
-  {% include "components/banner.njk" %}
+{% block css %}
+  <link rel="stylesheet" href="/assets/styles/slideshow.css">
 {% endblock %}
+
+{# {% block beforeContainer %}
+  {% include "components/banner.njk" %}
+{% endblock %} #}
 
 {% block content %}
   {% include "components/links-buttons.njk" %}
+  <ul id="slideshow" class="cb-slideshow">
+	<li>
+		<span>Image 01</span>
+		<div>
+			<h3>Happy</h3>
+		</div>
+	</li>
+
+  <li>
+		<span>Image 02</span>
+		<div>
+			<h3>Team</h3>
+		</div>
+	</li>
+
+  <li>
+		<span>Image 03</span>
+		<div>
+			<h3>Games</h3>
+		</div>
+	</li>
+
+  <li>
+		<span>Image 04</span>
+		<div>
+			<h3>Adventure</h3>
+		</div>
+	</li>
+  
+  <li>
+		<span>Image 05</span>
+		<div>
+			<h3>Welcome</h3>
+		</div>
+	</li>
+
+  <li>
+		<span>Image 06</span>
+		<div>
+			<h3>Here</h3>
+		</div>
+	</li>
+	
+</ul>
 {% endblock %}

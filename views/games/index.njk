@@ -15,9 +15,13 @@
       <div class="col">
         <h1>Games</h1>
       </div>
-      <div class="col text-right">
-        <a href="/games/new" class="btn btn-success btn-lg">Create a Game</a>
-      </div>
+
+      {% if access %}
+        <div class="col text-right">
+          <a href="/games/new" class="btn btn-success btn-lg">Create a Game</a>
+        </div>    
+      {% endif %}
+      
     </div>
   </div>
 
