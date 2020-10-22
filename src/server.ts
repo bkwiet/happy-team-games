@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { env } from "process";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
+let access = false;
 
 const jsonParser = bodyParser.json();
 const formParser = bodyParser.urlencoded({ extended: true });
@@ -61,12 +62,22 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
   const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
 
-  app.get("/", sessionParser, (request, response) =>
-    response.render("pages/home", { access: connection.checkAccess(request) }),
-  );
-  app.get("/api", sessionParser, (request, response) =>
-    response.render("pages/api", { access: connection.checkAccess(request) }),
-  );
+  app.get("/", sessionParser, async (request, response) => {
+    await connection
+      .checkAccess()(request)
+      .then((result) => (access = result));
+    response.render("pages/home", {
+      access,
+    });
+  });
+  app.get("/api", sessionParser, async (request, response) => {
+    await connection
+      .checkAccess()(request)
+      .then((result) => (access = result));
+    response.render("pages/api", {
+      access,
+    });
+  });
   app.get("/login", sessionParser, connection.connect());
   app.get("/logout", sessionParser, connection.logout());
   app.get("/oauth/callback", sessionParser, connection.callback());
@@ -132,12 +143,17 @@ export function makeApp(mongoClient: MongoClient): core.Express {
     connection.checkLoginStatus(gamesController.destroy(gameModel)),
   );
 
-  app.get("/*", sessionParser, (request, response) => {
+  app.get("/*", sessionParser, async (request, response) => {
     console.log(request.path);
     if (clientWantsJson(request)) {
       response.status(404).json({ error: "Not Found" });
     } else {
-      response.status(404).render("pages/not-found", { access: connection.checkAccess(request) });
+      await connection
+        .checkAccess()(request)
+        .then((result) => (access = result));
+      response.status(404).render("pages/not-found", {
+        access,
+      });
     }
   });
 

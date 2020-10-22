@@ -4,6 +4,7 @@ import slugify from "slug";
 import { checkAccess } from "./connection.controller";
 
 const clientWantsJson = (request: Request): boolean => request.get("accept") === "application/json";
+let access = false;
 
 export function index(platformModel: PlatformModel) {
   return async (request: Request, response: Response): Promise<void> => {
@@ -11,7 +12,7 @@ export function index(platformModel: PlatformModel) {
     if (clientWantsJson(request)) {
       response.json(platforms);
     } else {
-      const access = checkAccess(request);
+      await checkAccess()(request).then((result) => (access = result));
       response.render("platforms/index", { platforms, access });
     }
   };
@@ -19,7 +20,7 @@ export function index(platformModel: PlatformModel) {
 
 export function newPlatform() {
   return async (request: Request, response: Response): Promise<void> => {
-    const access = checkAccess(request);
+    await checkAccess()(request).then((result) => (access = result));
     response.render("platforms/new", { action: "/platforms", callToAction: "Create", access });
   };
 }
@@ -31,7 +32,7 @@ export function show(platformModel: PlatformModel) {
       if (clientWantsJson(request)) {
         response.json(platform);
       } else {
-        const access = checkAccess(request);
+        await checkAccess()(request).then((result) => (access = result));
         response.render("platforms/show", { platform, access });
       }
     } else {
@@ -39,7 +40,7 @@ export function show(platformModel: PlatformModel) {
       if (clientWantsJson(request)) {
         response.json({ error: "This platform does not exist." });
       } else {
-        const access = checkAccess(request);
+        await checkAccess()(request).then((result) => (access = result));
         response.status(404).render("pages/not-found", { access });
       }
     }
@@ -50,7 +51,7 @@ export function edit(platformModel: PlatformModel) {
   return async (request: Request, response: Response): Promise<void> => {
     const platform = await platformModel.findBySlug(request.params.slug);
     if (platform) {
-      const access = checkAccess(request);
+      await checkAccess()(request).then((result) => (access = result));
       response.render("platforms/edit", {
         platform,
         action: `/platforms/${platform.slug}`,
@@ -59,7 +60,7 @@ export function edit(platformModel: PlatformModel) {
       });
     } else {
       response.status(404);
-      const access = checkAccess(request);
+      await checkAccess()(request).then((result) => (access = result));
       response.status(404).render("pages/not-found", { access });
     }
   };

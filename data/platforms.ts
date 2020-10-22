@@ -24,6 +24,7 @@ const platforms = [
     sound: "5.1 channel Linear PCM (HDMI), analog stereo (3.5mm headphone jack)",
     storage: "32 GB NAND flash, expandable via microSD cards",
     platform_version_release_date: "Mar 03, 2017",
+    price: 250,
   },
   {
     code: 12,
@@ -48,6 +49,7 @@ const platforms = [
     resolutions: "480i, 480p, 720p, 1080i, 1080p",
     sound: "Analog Stereo, Dolby Digital 5,1",
     storage: "20 GB, 60 GB, 120 GB, 250 GB",
+    price: 300,
   },
   {
     code: 48,
@@ -71,6 +73,7 @@ const platforms = [
     os: "Orbis OS",
     platform_version_release_date: "Nov 15, 2013",
     storage: "Hard drive, 500GB (user upgradeable, supports SSD)",
+    price: 229,
   },
 ];
 

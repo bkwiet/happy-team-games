@@ -68,11 +68,18 @@ export function checkLoginStatus(callback: (request: Request, response: Response
   };
 }
 
-export function checkAccess(request: Request): boolean {
-  if (!request.session || !request.session.accessToken) {
-    return false;
-  }
-  return true;
+export function checkAccess() {
+  return async (request: Request): Promise<boolean> => {
+    if (!request.session || !request.session.accessToken) {
+      return false;
+    }
+    try {
+      await oauthClient.verifyJWT(request.session.accessToken, jwt_algo);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 }
 
 // export function refreshLoginStatus() {}
