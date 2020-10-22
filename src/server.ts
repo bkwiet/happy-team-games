@@ -11,6 +11,8 @@ import PlatformModel, { Platform } from "./models/platformModel";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { oauthClient } from "./controllers/login.controller";
+import PanierModel, { Panier } from "./models/panierModel";
+import * as panierController from "./controllers/panier.controller";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 
@@ -51,7 +53,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
   const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
-  //const panierModel = new PanierModel.collection("panier");
+  const panierModel = new PanierModel(mongoClient.db().collection<Panier>("panier"));
 
   app.get("/", (_request, response) => response.render("pages/home"));
   app.get("/api", (_request, response) => response.render("pages/api"));
@@ -93,7 +95,8 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   app.post("/games/:slug", formParser, gamesController.update(gameModel, platformModel));
   app.delete("/games/:slug", jsonParser, gamesController.destroy(gameModel));
 
-  app.post("/platformsPanierIndex", jsonParser, formParser, platformsController.addPanierIndex(platformModel));
+  app.post("/ajouterPanier", jsonParser, formParser, panierController.create(panierModel));
+  app.get("/panier", panierController.index(panierModel));
 
   app.get("/*", (request, response) => {
     console.log(request.path);

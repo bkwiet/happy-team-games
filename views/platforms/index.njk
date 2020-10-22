@@ -43,10 +43,12 @@
 
             <div class="form-row text-center">
               <div class="col-12 mt-1">
-                <form method="POST" action="/platformsPanierIndex">
+                <form method="POST" action="/ajouterPanier">
+                    <input type="hidden" name="code" value='{{platform.code}}'>
                     <input type="hidden" name="slug" value='{{platform.slug}}'>
                     <input type="hidden" name="price" value={{platform.price}}>
                     <input type="hidden" name="name" value='{{platform.name}}'>
+                    <input type="hidden" name="qty" value=1>
                     <button type="submit" class="btn btn-primary">Ajouter Panier</button>
                 </form>
               </div>
