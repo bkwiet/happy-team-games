@@ -5,14 +5,15 @@ import cors from "cors";
 import * as core from "express-serve-static-core";
 import express from "express";
 import session from "express-session";
-import * as gamesController from "./controllers/games.controller";
+import bodyParser from "body-parser";
+import { v4 as uuidv4 } from "uuid";
 import * as nunjucks from "nunjucks";
+import * as gamesController from "./controllers/games.controller";
 import * as platformsController from "./controllers/platforms.controller";
+import * as connection from "./controllers/connection.controller";
+import * as card from "./controllers/card.controller";
 import GameModel, { Game } from "./models/gameModel";
 import PlatformModel, { Platform } from "./models/platformModel";
-import bodyParser from "body-parser";
-import * as connection from "./controllers/connection.controller";
-import { v4 as uuidv4 } from "uuid";
 
 const clientWantsJson = (request: express.Request): boolean => request.get("accept") === "application/json";
 let access = false;
@@ -61,6 +62,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
   const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
 
+  // Index / Api routes
   app.get("/", sessionParser, async (request, response) => {
     await connection
       .checkAccess()(request)
@@ -77,9 +79,14 @@ export function makeApp(mongoClient: MongoClient): core.Express {
       access,
     });
   });
+
+  // Login / Logout routes
+
   app.get("/login", sessionParser, connection.connect());
   app.get("/logout", sessionParser, connection.logout());
   app.get("/oauth/callback", sessionParser, connection.callback());
+
+  // Platforms routes
 
   app.get("/platforms", sessionParser, platformsController.index(platformModel));
   app.get("/platforms/new", sessionParser, connection.checkLoginStatus(platformsController.newPlatform()));
@@ -112,8 +119,11 @@ export function makeApp(mongoClient: MongoClient): core.Express {
   );
 
   app.get("/platforms/:slug/games", sessionParser, gamesController.list(gameModel));
+
+  // Games routes
+
   app.get("/games", sessionParser, gamesController.index(gameModel));
-  app.get("/games/new", gamesController.newGame());
+  app.get("/games/new", connection.checkLoginStatus(gamesController.newGame()));
   app.get("/games/:slug", sessionParser, gamesController.show(gameModel));
   app.get("/games/:slug/edit", sessionParser, connection.checkLoginStatus(gamesController.edit(gameModel)));
   app.post(
@@ -142,6 +152,18 @@ export function makeApp(mongoClient: MongoClient): core.Express {
     connection.checkLoginStatus(gamesController.destroy(gameModel)),
   );
 
+  // Ecommerce routes
+  app.get("/card", sessionParser, connection.checkLoginStatus(card.index(mongoClient)));
+  app.get("/card/checkout", sessionParser, connection.checkLoginStatus(card.checkout()));
+  app.post(
+    "/card/add",
+    formParser,
+    sessionParser,
+    connection.checkLoginStatus(card.addProduct(mongoClient, gameModel)),
+  );
+  app.post("/card/remove", formParser, sessionParser, connection.checkLoginStatus(card.delProduct(mongoClient)));
+
+  // Bad request routes
   app.get("/*", sessionParser, async (request, response) => {
     console.log(request.path);
     if (clientWantsJson(request)) {

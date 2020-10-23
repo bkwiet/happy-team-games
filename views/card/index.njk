@@ -1,0 +1,27 @@
+{% extends "layout/index.njk" %}
+
+{% block title %}
+  <title>Your card</title>
+{% endblock %}
+
+{% block content %}
+
+<ul>
+
+  {% for product in products %}
+
+    <li> name : {{product.name }} / Price {{product.price }}
+          <form class="col-3 col-md-2 my-lg-0 mt-2 mt-md-0" action="/card/remove" method="POST">
+            <input class="form-control d-none" value="{{product.id}}" type="text" name="id" aria-label="text">
+            <button class="btn btn-game btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Supprimer du panier</button>
+          <form>
+    </li>
+    
+  {% endfor %}
+
+</ul>
+{# <p> Total de votre carte : {% total | sum%} </p> #}
+<p>
+  <a role="button" class="btn btn-game btn-lg" aria-expanded="false" href="/card/checkout">Payer</a>
+</p>
+{% endblock%}}

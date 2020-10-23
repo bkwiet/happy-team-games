@@ -20,6 +20,10 @@
 
         {% if access %}
           <a href="/games/{{game.slug}}/edit" class="btn btn-success ml-5">Edit</a>
+          <form class="col-3 col-md-2 my-lg-0 mt-2 mt-md-0" action="/card/add" method="POST">
+            <input class="form-control d-none" value="{{game.slug}}" type="text" name="game" aria-label="text">
+            <button class="btn btn-game btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Ajouter au panier</button>
+          <form>
         {% endif %}
 
       </div>
