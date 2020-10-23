@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 
-describe("Explore Games and Platforms ", () => {
+describe("Add and delete products", () => {
   jest.setTimeout(20000);
 
   beforeAll(async () => {
@@ -17,28 +17,21 @@ describe("Explore Games and Platforms ", () => {
         "--no-sandbox",
         "--no-zygote",
       ],
-      headless: true,
+      headless: false,
     });
   });
 
   afterAll(async () => {
     await closeBrowser();
   });
-  test("Games appear when we click on Explore games", async () => {
+  test("Delete to shopping cart", async () => {
     expect.assertions(1)
     const website = process.env.URL || "";
     await goto(website);
-    await click("Explore Video Games");
-    await waitFor("Games");
-    expect(await text("Games").exists()).toBeTruthy();
+    await click("Games");
+    await click ("Ajouter Panier")
+    await click ("Panier");
+    await waitFor("Supprimer");
+    expect(await text("Supprimer").exists()).toBeTruthy();
 });
-test("Platforms appear when we click on Explore Platforms", async () => {
-    expect.assertions(1)
-    const website = process.env.URL || "";
-    await goto(website);
-    await click("Explore Platforms");
-    await waitFor("Platforms");
-    expect(await text("Platforms").exists()).toBeTruthy();
-});
-
 });

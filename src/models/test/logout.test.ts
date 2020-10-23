@@ -1,11 +1,8 @@
 import { openBrowser, closeBrowser, goto, text, click, waitFor, write, into, textBox } from "taiko";
 import * as dotenv from "dotenv";
 dotenv.config();
-
-
-describe("We can open our website and Login", () => {
+describe("We can open our website and Logout", () => {
   jest.setTimeout(20000);
-
   beforeAll(async () => {
     await openBrowser({
       args: [
@@ -20,12 +17,10 @@ describe("We can open our website and Login", () => {
       headless: true,
     });
   });
-
   afterAll(async () => {
     await closeBrowser();
   });
-
-  test("We can Login", async () => {
+  test("We can Logout", async () => {
     expect.assertions(1);
     const password = process.env.PASSWORD|| "";
     const mail = process.env.EMAIL || "";
@@ -37,8 +32,21 @@ describe("We can open our website and Login", () => {
     await click("NEXT");
     await write(password, into(textBox("Password")));
     await click("NEXT");
-    await waitFor("Logout");
-    expect(await text("Logout").exists()).toBeTruthy();
+    await click("Logout")
+    await waitFor("Login");
+    expect(await text("Login").exists()).toBeTruthy();
   });
   });
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
