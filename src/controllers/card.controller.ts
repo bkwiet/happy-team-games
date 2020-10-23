@@ -53,6 +53,7 @@ export function addProduct(mongoClient: MongoClient, gameModel: GameModel) {
 
 export function delProduct(mongoClient: MongoClient) {
   return async (request: Request, response: Response): Promise<void> => {
+    console.log(request.body.id);
     const _id = new ObjectId(request.body.id);
     mongoClient
       .db()

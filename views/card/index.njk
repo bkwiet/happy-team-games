@@ -22,7 +22,7 @@
         <p class="card-text">Price : {{product.price }} €</p>
         <form class="my-lg-0 mt-2 mt-md-0" action="/card/remove" method="POST">
           <input class="form-control d-none" value="{{product._id}}" type="text" name="id" aria-label="text">
-          <button class="btn btn-danger btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Remove</button>
+          <button class="btn btn-danger btn-lg" type="submit" aria-expanded="false" aria-controls="btn">Remove</button>
         <form>
       </div>
     </div>
@@ -34,8 +34,10 @@
 <p>
 {% if products.length === 0 %}
 
-  <p> Ajouter des articles dans votre panier</p>
-  {% else %}
+   Ajouter des articles dans votre panier
+
+{% else %}
+
   <a role="button" class="btn btn-success btn-lg" aria-expanded="false" href="/card/checkout">Checkout</a>
       
 {% endif %}
