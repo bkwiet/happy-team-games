@@ -1,5 +1,9 @@
 {% extends "layout/index.njk" %}
 
+{% block title %}
+  <title>Happy Game Store : API</title>
+{% endblock %}
+
 {% block content %}
   <div class="container mt-5">
     <div class="row">
@@ -16,7 +20,7 @@
       <div class="col-12">
         <h3>GET all games</h3>
         <pre class="bg-light border border-secondary rounded col-12"><code>
-        curl -H 'Accept: application/json' https://videogames-sparta.herokuapp.com/games
+        curl -H 'Accept: application/json' https://happy-team-games.herokuapp.com/games
       </code></pre>
       </div>
 
@@ -24,7 +28,7 @@
         <h3>GET one game</h3>
         <p>Once you have the <em>slug</em> of a game, you can use it to get its data directly:</p>
         <pre class="bg-light border border-secondary rounded col-12"><code>
-        curl -H 'Accept: application/json' https://videogames-sparta.herokuapp.com/games/uncharted-4-a-thief-s-end
+        curl -H 'Accept: application/json' https://happy-team-games.herokuapp.com/games/uncharted-4-a-thief-s-end
       </code></pre>
       </div>
     </div>
@@ -35,20 +39,20 @@
       <div class="col-12">
         <h3>GET all Platforms</h3>
         <pre class="bg-light border border-secondary rounded col-12"><code>
-        curl -H 'Accept: application/json' https://videogames-sparta.herokuapp.com/platforms
+        curl -H 'Accept: application/json' https://happy-team-games.herokuapp.com/platforms
       </code></pre>
       </div>
       <div class="col-12">
         <h3>GET one platform</h3>
         <p>Once you have the <em>slug</em> of a platform, you can use it to get its data directly:</p>
         <pre class="bg-light border border-secondary rounded col-12"><code>
-        curl -H 'Accept: application/json' https://videogames-sparta.herokuapp.com/platforms/nintendo-switch
+        curl -H 'Accept: application/json' https://happy-team-games.herokuapp.com/platforms/nintendo-switch
       </code></pre>
       </div>
       <div class="col-12">
         <h3>GET all games of one platform</h3>
         <pre class="bg-light border border-secondary rounded col-12"><code>
-        curl -H 'Accept: application/json' https://videogames-sparta.herokuapp.com/platforms/nintendo-switch/games
+        curl -H 'Accept: application/json' https://happy-team-games.herokuapp.com/platforms/nintendo-switch/games
       </code></pre>
       </div>
     </div>

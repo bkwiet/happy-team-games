@@ -1,0 +1,21 @@
+body {
+  background: url("/assets/images/wcraft.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.container {
+  margin-top: 10rem;
+  min-height: 50rem;
+}
+
+.btn-login {
+  background-color: rgb(191 169 162);
+  color: rgb(73 73 191);
+  border: 1px solid rgb(0 32 255);
+  height: 6rem;
+  font-weight: bold;
+  padding-top: 2rem;
+}
