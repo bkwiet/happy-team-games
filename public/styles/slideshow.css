@@ -54,7 +54,7 @@
   font-size: 6rem;
   font-weight: bold;
   padding: 0;
-  line-height: 200px;
+  line-height: 40rem;
 }
 .cb-slideshow li:nth-child(1) span {
   background-image: url(../images/wallpaper/1.jpg);
@@ -141,5 +141,10 @@
 @media screen and (max-width: 600px) {
   .cb-slideshow li div h3 {
     font-size: 80px;
+  }
+}
+@media screen and (max-height: 600px) {
+  .cb-slideshow li div h3 {
+    line-height: 20rem;
   }
 }

@@ -1,0 +1,10 @@
+h1.titre_error {
+  color: rgb(33 31 31);
+  text-align: center;
+}
+
+img.error {
+  height: 35rem;
+  border: 2px inset rgb(97 12 12);
+  padding: 0;
+}

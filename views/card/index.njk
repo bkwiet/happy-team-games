@@ -1,0 +1,44 @@
+{% extends "layout/index.njk" %}
+
+{% block css %}
+  <link rel="stylesheet" href="/assets/styles/usercard.css">  
+{% endblock %}
+
+{% block title %}
+  <title>Happy Games Store : Your card</title>
+{% endblock %}
+
+{% block content %}
+<h1>Your Card</h1>
+
+<div class="row">
+  
+  {% for product in products %}
+
+    <div class="card col-12 col-md-3 mx-2 mt-3">
+      <a href="/games/{{product.slug}}"><img class="card-img-top" src="{{product.cover }}""  alt="cover"></a> 
+      <div class="card-body">
+        <h5 class="card-title">{{product.name }}</h5>
+        <p class="card-text">Price : {{product.price }} €</p>
+        <form class="my-lg-0 mt-2 mt-md-0" action="/card/remove" method="POST">
+          <input class="form-control d-none" value="{{product._id}}" type="text" name="id" aria-label="text">
+          <button class="btn btn-danger btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Remove</button>
+        <form>
+      </div>
+    </div>
+    
+  {% endfor %}
+
+</div>
+<p> Total de votre carte : {{ total }} € </p>
+<p>
+{% if products.length === 0 %}
+
+  <p> Ajouter des articles dans votre panier</p>
+  {% else %}
+  <a role="button" class="btn btn-success btn-lg" aria-expanded="false" href="/card/checkout">Checkout</a>
+      
+{% endif %}
+
+</p>
+{% endblock%}

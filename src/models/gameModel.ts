@@ -19,6 +19,7 @@ export type GameInput = {
       width: number;
     };
   }[];
+  price?: number;
   rating?: number;
   rating_count?: number;
   screenshots?: {

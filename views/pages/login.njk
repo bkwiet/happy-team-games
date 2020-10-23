@@ -1,9 +1,15 @@
 {% extends "layout/index.njk" %}
 
-{% block beforeContainer %}
-  {% include "components/banner.njk" %}
+{% block css %}
+  <link rel="stylesheet" href="/assets/styles/login.css">  
+{% endblock %}
+
+{% block title %}
+  <title>Happy Games Store : Login</title>
 {% endblock %}
 
 {% block content %}
-  <a role="button" class="btn btn-danger" href="{{ oauth_URL }}"> Do you want to log ?</a>
+  <div class="container">
+    <a role="button" class="btn btn-login" href="{{ oauth_URL }}"> <img src="/assets/images/favicon-fewlines-2020.png" alt="fewlines logo"> Login via Fewlines connect</a>
+  </div>
 {% endblock %}

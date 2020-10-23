@@ -25,6 +25,7 @@ export const oauthClient = new OAuth2Client(oauthClientConstructorProps);
 
 export function connect() {
   return async (request: Request, response: Response): Promise<void> => {
+    // Ajouter gestion des erreurs =>
     const oauth_URL = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
     response.render("pages/login", { oauth_URL });
   };
@@ -36,13 +37,11 @@ export function callback() {
       const token = await oauthClient.getTokensFromAuthorizationCode(String(request.query.code));
 
       if (token.id_token) {
-        // const decodedToken = await oauthClient.verifyJWT(token.access_token, jwt_algo);
-        console.log(request);
-        console.log(token.id_token);
+        // const decodedID_Token = await oauthClient.verifyJWT(token.id_token, jwt_algo).then();
         if (request.session) {
           request.session.accessToken = token.access_token;
         }
-        console.log(request.session);
+        // console.log(request.session);
         response.redirect("/");
       } else {
         response.status(401).json({ error: "Failed connection" });
@@ -77,6 +76,7 @@ export function checkAccess() {
       await oauthClient.verifyJWT(request.session.accessToken, jwt_algo);
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   };

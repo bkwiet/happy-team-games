@@ -18,7 +18,19 @@
 
         <h1 class="col-12 col-md-9">{{game.name}}</h1>
 
-        {% if access %}
+                
+        {% if access %}  
+
+          <form method="POST" action="/ajouterPanier">
+              <input type="hidden" name="code" value='{{game.code}}'>
+              <input type="hidden" name="slug" value='{{game.slug}}'>
+              <input type="hidden" name="price" value='{{game.price}}'>
+              <input type="hidden" name="name" value='{{game.name}}'>
+              <input type="hidden" name="qty" value=1>
+              <input type="hidden" name="pagereturn" value='/games'>
+              <button type="submit" class="btn btn-primary">Ajouter Panier</button>
+          </form>
+        
           <a href="/games/{{game.slug}}/edit" class="btn btn-success ml-5">Edit</a>
         {% endif %}
 
