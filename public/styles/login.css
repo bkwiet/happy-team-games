@@ -1,10 +1,10 @@
-body {
+/* body {
   background: url("/assets/images/wcraft.jpg");
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-}
+} */
 
 .container {
   margin-top: 10rem;

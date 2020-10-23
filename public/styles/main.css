@@ -1,3 +1,13 @@
+body {
+  background-image: url(../images/fond.png) !important;
+  /* height: 100%;
+  width: 100%; */
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .banner {
   height: 400px;
   background-image: url(/assets/images/banner-img.jpg);

@@ -5,3 +5,6 @@ img.card-img-top {
 .card-body {
   text-align: center;
 }
+.card {
+  padding-bottom: 0.5rem;
+}

@@ -1,7 +1,7 @@
 {% extends "layout/index.njk" %}
 
 {% block title %}
-  <title>Happy Games Store : {{game.name}}</title>
+  <title>GD: {{game.name}}</title>
 {% endblock %}
 
 {% block css %}
@@ -18,12 +18,20 @@
 
         <h1 class="col-12 col-md-9">{{game.name}}</h1>
 
-        {% if access %}
+                
+        {% if access %}  
+
+          <form method="POST" action="/ajouterPanier">
+              <input type="hidden" name="code" value='{{game.code}}'>
+              <input type="hidden" name="slug" value='{{game.slug}}'>
+              <input type="hidden" name="price" value='{{game.price}}'>
+              <input type="hidden" name="name" value='{{game.name}}'>
+              <input type="hidden" name="qty" value=1>
+              <input type="hidden" name="pagereturn" value='/games'>
+              <button type="submit" class="btn btn-primary">Ajouter Panier</button>
+          </form>
+        
           <a href="/games/{{game.slug}}/edit" class="btn btn-success ml-5">Edit</a>
-          <form class="col-3 col-md-2 my-lg-0 mt-2 mt-md-0" action="/card/add" method="POST">
-            <input class="form-control d-none" value="{{game.slug}}" type="text" name="game" aria-label="text">
-            <button class="btn btn-lg btn-danger" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Ajouter au panier</button>
-          <form>
         {% endif %}
 
       </div>
