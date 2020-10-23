@@ -10,39 +10,42 @@
 
 {% block content %}
 <h1>Final step</h1>
-<div class="row mt-3">
+<form class="row mt-3" action="#" method="POST">
   <div class="card col-12 col-md-3 mx-2 mt-3">
     <img class="card-img-top" src="/assets/images/checkout/mastercard.jpg" alt="visa card">
     <div class="card-body">
       <h5 class="card-title">Mastercard</h5>
-      <a href="#" class="btn btn-primary">Payer</a>
+      <input class="form-check-input" type="radio" name="paiement" id="paiement_master" value="mastercard" checked>
     </div>
   </div>
 
   <div class="card mr-2 col-12 col-md-3 mx-2 mt-3">
-    <img class="card-img-top" src="/assets/images/checkout/paypal.png" alt="visa card">
+    <img class="card-img-top" src="/assets/images/checkout/paypal.png" alt="paypal">
     <div class="card-body">
       <h5 class="card-title">Paypal</h5>
-      <a href="#" class="btn btn-primary">Payer</a>
+      <input class="form-check-input" type="radio" name="paiement" id="paiement_paypal" value="paypal">
     </div>
   </div>
 
   <div class="card mr-2 col-12 col-md-3 mx-2 mt-3">
-    <img class="card-img-top" src="/assets/images/checkout/bitcoin.png" alt="visa card">
+    <img class="card-img-top" src="/assets/images/checkout/bitcoin.png" alt="bitcoin">
     <div class="card-body">
       <h5 class="card-title">Bitcoin </h5>
-      <a href="#" class="btn btn-primary">Payer</a>
+      <input class="form-check-input" type="radio" name="paiement" id="paiement_bitcoin" value="bitcoin">
     </div>
   </div>
 
   <div class="card mr-2 mr-2 col-12 col-md-3 mx-2 mt-3">
-    <img class="card-img-top" src="/assets/images/checkout/googlepay.png" alt="visa card">
+    <img class="card-img-top" src="/assets/images/checkout/googlepay.png" alt="google pay">
     <div class="card-body">
       <h5 class="card-title">Google Pay</h5>
-      <a href="#" class="btn btn-primary">Payer</a>
+      <input class="form-check-input" type="radio" name="paiement" id="paiement_google" value="google_pay">
     </div>
   </div>
 
-</div>
+  <button class="btn btn-danger btn-lg col-12 mt-3" type="submit" aria-expanded="false" aria-controls="btn">Payer {{total}} €</button>
+</form>
+
+
 
 {% endblock%}

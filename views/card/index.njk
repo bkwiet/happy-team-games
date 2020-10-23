@@ -5,23 +5,36 @@
 {% endblock %}
 
 {% block content %}
+<h1>Your Card</h1>
 
-<ul>
-
+<div class="row">
+  
   {% for product in products %}
 
-    <li> name : {{product.name }} / Price {{product.price }}
-          <form class="col-3 col-md-2 my-lg-0 mt-2 mt-md-0" action="/card/remove" method="POST">
-            <input class="form-control d-none" value="{{product.id}}" type="text" name="id" aria-label="text">
-            <button class="btn btn-game btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Supprimer du panier</button>
-          <form>
-    </li>
+    <div class="card col-12 col-md-3 mx-2 mt-3">
+      <a href="/games/{{product.slug}}"><img class="card-img-top" src="{{product.cover }}""  alt="cover"></a> 
+      <div class="card-body">
+        <h5 class="card-title">{{product.name }}</h5>
+        <p class="card-text">Price : {{product.price }} €</p>
+        <form class="col-3 col-md-2 my-lg-0 mt-2 mt-md-0" action="/card/remove" method="POST">
+          <input class="form-control d-none" value="{{product._id}}" type="text" name="id" aria-label="text">
+          <button class="btn btn-danger btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Remove</button>
+        <form>
+      </div>
+    </div>
     
   {% endfor %}
 
-</ul>
-{# <p> Total de votre carte : {% total | sum%} </p> #}
+</div>
+<p> Total de votre carte : {{ total }} € </p>
 <p>
-  <a role="button" class="btn btn-game btn-lg" aria-expanded="false" href="/card/checkout">Payer</a>
+{% if products.length === 0 %}
+
+  <p> Ajouter des articles dans votre panier</p>
+  {% else %}
+  <a role="button" class="btn btn-success btn-lg" aria-expanded="false" href="/card/checkout">Checkout</a>
+      
+{% endif %}
+
 </p>
 {% endblock%}

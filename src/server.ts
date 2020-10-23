@@ -154,7 +154,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   // Ecommerce routes
   app.get("/card", sessionParser, connection.checkLoginStatus(card.index(mongoClient)));
-  app.get("/card/checkout", sessionParser, connection.checkLoginStatus(card.checkout()));
+  app.get("/card/checkout", sessionParser, connection.checkLoginStatus(card.checkout(mongoClient)));
   app.post(
     "/card/add",
     formParser,

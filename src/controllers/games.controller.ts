@@ -14,7 +14,6 @@ export function index(gameModel: GameModel) {
       response.json(games);
     } else {
       await checkAccess()(request).then((result) => (access = result));
-
       response.render("games/index", { games, access });
     }
   };
