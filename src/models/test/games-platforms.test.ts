@@ -1,4 +1,4 @@
-import { openBrowser, closeBrowser, goto, text, click, waitFor} from "taiko";
+import { openBrowser, closeBrowser, goto, text, click, waitFor, $} from "taiko";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -29,7 +29,7 @@ describe("Explore Games and Platforms ", () => {
     const website = process.env.URL || "";
     await goto(website);
     await click("Explore Video Games");
-    await waitFor("Games");
+    await waitFor($(`games`));
     expect(await text("Games").exists()).toBeTruthy();
 });
 test("Platforms appear when we click on Explore Platforms", async () => {

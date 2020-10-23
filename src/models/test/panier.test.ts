@@ -1,4 +1,4 @@
-import { openBrowser, closeBrowser, goto, text, click, waitFor} from "taiko";
+import { openBrowser, closeBrowser, goto, text, click, waitFor,$} from "taiko";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -17,7 +17,7 @@ describe("Add and delete products", () => {
         "--no-sandbox",
         "--no-zygote",
       ],
-      headless: true,
+      headless: false,
     });
   });
 
@@ -28,11 +28,11 @@ describe("Add and delete products", () => {
     expect.assertions(1)
     const website = process.env.URL || "";
     await goto(website);
-    await click("Games");
-    await click ("Ajouter Panier")
-    await click ("Panier");
-    await click ("Payer");
-    await waitFor("Paiement de vos Achats");
+    await click($(`#games`));
+    await click ($(`#ajout`))
+    await click ($(`#panier`));
+    await click ($(`#payer`));
+    await waitFor($(`#paiement`));
     expect(await text("Paiement de vos Achats").exists()).toBeTruthy();
 });
 });

@@ -1,4 +1,4 @@
-import { openBrowser, closeBrowser, goto, text, click, waitFor} from "taiko";
+import { openBrowser, closeBrowser, goto, text, click, waitFor,$} from "taiko";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -28,10 +28,10 @@ describe("Add and delete products", () => {
     expect.assertions(1)
     const website = process.env.URL || "";
     await goto(website);
-    await click("Games");
-    await click ("Ajouter Panier")
-    await click ("Panier");
-    await waitFor("Supprimer");
+    await click($(`#games`));
+    await click ($(`#ajout`))
+    await click ($(`#panier`));
+    await waitFor($(`#supprimer`));
     expect(await text("Supprimer").exists()).toBeTruthy();
 });
 });

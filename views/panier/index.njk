@@ -16,7 +16,7 @@
         <h1>Votre Panier</h1>
         <h1 class="ml-4" style="color: rgb(60, 109, 11)">{{totalpanier}} €</h1>
        
-        <a class="nav-link btn btn-primary ml-4" href="/payer">Payer</a>
+        <a class="nav-link btn btn-primary ml-4" id="payer" href="/payer">Payer</a>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@
                 <h5>€</h5>
 
                 <form method="POST" class="btn" action="/panier/delete/{{achat.slug}}">
-                  <button class="btn btn-block btn-danger " type="submit"> Supprimer </button>
+                  <button class="btn btn-block btn-danger " id="supprimer" type="submit"> Supprimer </button>
                 </form>
 
               </div>

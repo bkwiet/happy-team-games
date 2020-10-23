@@ -1,4 +1,4 @@
-import { openBrowser, closeBrowser, goto, text, click, waitFor, write, into, textBox } from "taiko";
+import { openBrowser, closeBrowser, goto, text, click, waitFor, write, into, textBox,$ } from "taiko";
 import * as dotenv from "dotenv";
 dotenv.config();
 describe("We can open our website and Logout", () => {
@@ -14,7 +14,7 @@ describe("We can open our website and Logout", () => {
         "--no-sandbox",
         "--no-zygote",
       ],
-      headless: true,
+      headless: false,
     });
   });
   afterAll(async () => {
@@ -26,14 +26,14 @@ describe("We can open our website and Logout", () => {
     const mail = process.env.EMAIL || "";
     const website = process.env.URL || "";
     await goto(website);
-    await click("Login");
-    await click("Do you want to log ?");
+    await click($(`#login`));
+    await click($(`#doyoulog`));
     await write(mail, into(textBox("Email")));
     await click("NEXT");
     await write(password, into(textBox("Password")));
     await click("NEXT");
-    await click("Logout")
-    await waitFor("Login");
+    await click($(`#logout`))
+    await waitFor($(`#login`));
     expect(await text("Login").exists()).toBeTruthy();
   });
   });
