@@ -22,3 +22,8 @@
 }
 
 @media (min-width: 1200px) {} */
+
+body{ background-image:url(../images/fond.png)!important;
+  height:100%;
+  width: 100%;
+  }

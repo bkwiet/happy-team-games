@@ -1,5 +1,9 @@
+{% block css %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/">VGD</a>
+  <a class="navbar-brand" href="/">HappyGamesShop</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -14,23 +18,36 @@
       <li class="nav-item">
         <a class="nav-link" href="/api">API</a>
       </li>
-
-      
-    </ul>
-    <ul class="navbar-nav ml-auto">
+<ul id="clignot">
+    <li class="cliOne">H</li>
+    <li class="cliOne">A</li>
+    <li class="cliOne">P</li>
+    <li class="cliOne">P</li>
+    <li class="cliOne">Y</li>
+    <li class="cliOne">&nbsp</li>
+    <li class="cliOne">T</li>
+    <li class="cliOne">E</li>
+    <li class="cliOne">A</li>
+    <li class="cliOne">M</li>
+    <li class="cliOne">&nbsp</li>
+    <li class="cliOne">G</li>
+    <li class="cliOne">A</li>
+    <li class="cliOne">M</li>
+    <li class="cliOne">E</li>
+    <li class="cliOne">S</li>
+  </ul>
 
       <li class="nav-item">
-
-      {% if access %}
-        <a class="nav-link" href="/logout">Logout</a>
-      {% else %}
-      
         <a class="nav-link" href="/login">Login</a>
-      {% endif %}
       </li>
-
+    </ul> 
+    
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/panier">Panier</a>
+        <a href="/panier">
+          <button class="btn btn-danger btn-circle btn-lg" ><span class="fa fa-shopping-cart"></span></button>
+        </a>
+              
       </li>
     </ul>
   </div>

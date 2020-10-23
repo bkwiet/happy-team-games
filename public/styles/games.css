@@ -2,3 +2,8 @@
   right: 10px;
   bottom: 5px;
 }
+
+body{ background-image:url(../images/fond.png)!important;
+  height:100%;
+  width: 100%;
+  }
