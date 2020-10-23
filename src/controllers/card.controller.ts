@@ -53,6 +53,7 @@ export function addProduct(mongoClient: MongoClient, gameModel: GameModel) {
 
 export function delProduct(mongoClient: MongoClient) {
   return async (request: Request, response: Response): Promise<void> => {
+    // Add error controller > due to some missed arguments
     const _id = new ObjectId(request.body.id);
     mongoClient
       .db()

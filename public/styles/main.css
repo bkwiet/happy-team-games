@@ -49,3 +49,7 @@ a.btn.btn-index:hover {
   color: rgb(193 7 7);
   background: rgb(30 31 30 / 83%);
 }
+
+#user_cart {
+  height: 2rem;
+}
