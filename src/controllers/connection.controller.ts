@@ -41,7 +41,7 @@ export function callback() {
         if (request.session) {
           request.session.accessToken = token.access_token;
         }
-        console.log(request.session);
+        // console.log(request.session);
         response.redirect("/");
       } else {
         response.status(401).json({ error: "Failed connection" });
