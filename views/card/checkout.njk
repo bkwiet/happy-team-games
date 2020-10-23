@@ -1,1 +1,48 @@
 {% extends "layout/index.njk" %}
+
+{% block css %}
+  <link rel="stylesheet" href="/assets/styles/checkout.css">  
+{% endblock %}
+
+{% block title %}
+  <title>Checkout</title>
+{% endblock %}
+
+{% block content %}
+<h1>Final step</h1>
+<div class="row mt-3">
+  <div class="card col-12 col-md-3 mx-2 mt-3">
+    <img class="card-img-top" src="/assets/images/checkout/mastercard.jpg" alt="visa card">
+    <div class="card-body">
+      <h5 class="card-title">Mastercard</h5>
+      <a href="#" class="btn btn-primary">Payer</a>
+    </div>
+  </div>
+
+  <div class="card mr-2 col-12 col-md-3 mx-2 mt-3">
+    <img class="card-img-top" src="/assets/images/checkout/paypal.png" alt="visa card">
+    <div class="card-body">
+      <h5 class="card-title">Paypal</h5>
+      <a href="#" class="btn btn-primary">Payer</a>
+    </div>
+  </div>
+
+  <div class="card mr-2 col-12 col-md-3 mx-2 mt-3">
+    <img class="card-img-top" src="/assets/images/checkout/bitcoin.png" alt="visa card">
+    <div class="card-body">
+      <h5 class="card-title">Bitcoin </h5>
+      <a href="#" class="btn btn-primary">Payer</a>
+    </div>
+  </div>
+
+  <div class="card mr-2 mr-2 col-12 col-md-3 mx-2 mt-3">
+    <img class="card-img-top" src="/assets/images/checkout/googlepay.png" alt="visa card">
+    <div class="card-body">
+      <h5 class="card-title">Google Pay</h5>
+      <a href="#" class="btn btn-primary">Payer</a>
+    </div>
+  </div>
+
+</div>
+
+{% endblock%}
