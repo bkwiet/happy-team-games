@@ -32,6 +32,11 @@
               <div class="d-flex flex-row">
                 <h4>{{achat.price}}</h4>
                 <h5>€</h5>
+
+                <form method="POST" class="btn" action="/panier/delete/{{achat.slug}}">
+                  <button class="btn btn-block btn-danger " type="submit"> Supprimer </button>
+                </form>
+
               </div>
             </div>
         </div>

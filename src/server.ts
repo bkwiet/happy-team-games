@@ -147,6 +147,7 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   app.post("/ajouterPanier", jsonParser, formParser, panierController.create(panierModel));
   app.get("/panier", panierController.index(panierModel));
+  app.post("/panier/delete/:slug", jsonParser, formParser, panierController.destroy(panierModel));
   app.get("/payer", jsonParser, sessionParser, panierController.payer(panierModel));
 
   app.get("/*", sessionParser, async (request, response) => {

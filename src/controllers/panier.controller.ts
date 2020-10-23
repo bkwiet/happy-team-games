@@ -121,8 +121,12 @@ export function update(panierModel: PanierModel) {
 export function destroy(panierModel: PanierModel) {
   return async (request: Request, response: Response): Promise<void> => {
     const panier = await panierModel.findByPanierSlug(request.params.slug);
+    console.log(request.params.slug);
+    console.log(panier);
     if (panier) {
+      //console.log(panier);
       panierModel.remove(panier._id);
+      response.redirect("/panier");
       response.status(204).end();
     } else {
       response.status(404).end();
