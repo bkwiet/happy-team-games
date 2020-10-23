@@ -37,8 +37,25 @@
             <div>
               <h5 class="card-title">{{platform.name}}</h5>
               <p class="card-text partial-text">{{platform.summary}}</p>
+              <div class="d-flex flex-row">
+                <h4>{{platform.price}} €</h4>
+              </div>
             </div>
+
             <a href="/platforms/{{platform.slug}}" class="btn btn-secondary">View Games</a>
+            <div class="form-row text-center">
+                <div class="col-12 mt-1">
+                  <form method="POST" action="/ajouterPanier">
+                      <input type="hidden" name="code" value='{{platform.code}}'>
+                      <input type="hidden" name="slug" value='{{platform.slug}}'>
+                      <input type="hidden" name="price" value={{platform.price}}>
+                      <input type="hidden" name="name" value='{{platform.name}}'>
+                      <input type="hidden" name="qty" value=1>
+                      <input type="hidden" name="pagereturn" value='/platforms'>
+                      <button type="submit" class="btn btn-primary">Ajouter Panier</button>
+                  </form>
+                </div>
+              </div>
           </div>
         </div>
       </div>
