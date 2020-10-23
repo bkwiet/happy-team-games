@@ -1,63 +1,44 @@
-{% extends "layout/index.njk" %}
+{% extends "layout/index.njk" %} 
 
-{% block title %}
-  <title>GD: Games</title>
-{% endblock %}
+{% block css  %}
+  <link rel="stylesheet" href="/assets/styles/games.css">
+  <link rel="stylesheet" href="/assets/css/card.css">
+ {% endblock %}
 
-{% block css %}
-  <link rel="stylesheet" href="assets/styles/games.css">
-{% endblock %}
-
-{% block content %}
-
-  <div class="container mt-5 mb-5">
-    <div class="row">
-      <div class="col">
-        <h1>Games</h1>
-      </div>
-
-      {% if access %}
-        <div class="col text-right">
-          <a href="/games/new" class="btn btn-success btn-lg">Create a Game</a>
-        </div>    
-      {% endif %}
-      
-    </div>
+{% block content %} 
+  <div class="row mt-3">
+    <h1 class="col-12 col-md-6 js-phrase"> Games collection</h1>
   </div>
 
-  <ul class="list-group mb-5">
+  <div id="collection" class="row">
     {% for game in games %}
-      <li class="list-group-item d-flex position-relative row">
-        <div class="col-3">
-          <img src="{{game.cover.url}}" alt="{{game.name}} cover" class="mr-2" style="max-width: 200px; max-height: 100px;">
-        </div>
-        <h3 class="col-8">
-          <a href="/games/{{game.slug}}">{{game.name}}</a>
-        </h3>
-
-        <div class="col-1 game-availability">
-          {% for platform in game.platforms %}
-            <img src="{{platform.platform_logo.url}}" height="40px" width="40px" class="ml-2">
-          {% endfor %}
-        </div>
-
-  
-        <h4>{{game.price}} €</h4>
-        <div class="form-row text-center">
-          <div class="col-12 mt-1">
-            <form method="POST" action="/ajouterPanier">
-              <input type="hidden" name="code" value='{{game.code}}'>
-              <input type="hidden" name="slug" value='{{game.slug}}'>
-              <input type="hidden" name="price" value={{game.price}}>
-              <input type="hidden" name="name" value='{{game.name}}'>
-              <input type="hidden" name="qty" value=1>
-              <button type="submit" class="btn btn-primary">Ajouter Panier</button>
-            </form>
+      <div class="card flip-box col-12 col-md-3 col-lg-2 mx-2 mt-3" title="{{game.name}}">
+        <div class="flip-box-inner">
+          <div class="flip-box-front">
+            <img class="card-img-top mt-2" src={{game.cover.url}} alt="Card image cap">
+            <div class="card-body">
+              <p class="card-text">{{game.name}}</p>
+            </div>
+            <div>
+              <h4>{{game.price}} €</h4>
+            </div>
+            
           </div>
-        </div>  
 
+          <div class="flip-box-back">
+              <div class="card-body">
+                <a  href={{'/games/'+game.slug}} > 
+                  <p class="card-text">{{game.summary}}</p>
+                </a> 
+              </div>
+          </div>
+        </div>
+      </div>
+    {%endfor %} 
+  </div>
 
-      </li>
-    {% endfor %}
-  </ul>
+{% endblock %}
+
+{% block script_js  %} 
+  <script src="/assets/js/search_input.js" crossorigin="anonymous"></script>
 {% endblock %}

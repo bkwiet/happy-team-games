@@ -70,7 +70,7 @@ export function create(panierModel: PanierModel) {
       if (request.get("Content-Type") === "application/json") {
         response.status(201).json(panier);
       } else if (request.get("Content-Type") === "application/x-www-form-urlencoded") {
-        response.redirect(`/platforms`);
+        response.redirect(request.body.pagereturn);
       }
     }
   };

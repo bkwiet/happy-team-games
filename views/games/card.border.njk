@@ -1,0 +1,30 @@
+<div class="card-deck border">
+    <div class="card">
+        <img class="card-img-top" src="{{game.cover.url}}" alt="{{game.name}} cover" style="max-width: 200px; max-height: 100px;">
+
+        <div class="card-body">
+            <h5 class="card-title"><a href="/games/{{game.slug}}">{{game.name}}</a></h5>
+            <button type="button" class="btn btn-primary">Ajouter au panier</button>
+            {% for platform in game.platforms %}
+                <img src="{{platform.platform_logo.url}}" height="40px" width="40px" class="ml-2">
+            {% endfor %}
+        </div>
+
+        <div class="container">
+            <div class="card-deck text-center">
+                <div class="col-sm-8 col-md-15 col-lg-3">
+                    <div class="card mb-6">
+                    </div>
+                    <div class="card-body" style="height: 20rem">
+                        <div class="col-1 game-availability">
+                        </div>
+                        <h1 class="col-1 col-md-1"></h1>
+        
+                        <div class="card-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div>
+    </div>
+</div>

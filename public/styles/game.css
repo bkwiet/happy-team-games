@@ -1,3 +1,8 @@
+body{ background-image:url(../images/fond.png)!important;
+  height:100%;
+  width: 100%;
+  }
+
 #game-main .row {
   flex-direction: column-reverse;
 }
@@ -7,8 +12,3 @@
     flex-direction: row;
   }
 }
-
-body{ background-image:url(../images/fond.png)!important;
-  height:100%;
-  width: 100%;
-  }
