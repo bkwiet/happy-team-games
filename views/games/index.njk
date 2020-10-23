@@ -34,11 +34,29 @@
         <h3 class="col-8">
           <a href="/games/{{game.slug}}">{{game.name}}</a>
         </h3>
+
         <div class="col-1 game-availability">
           {% for platform in game.platforms %}
             <img src="{{platform.platform_logo.url}}" height="40px" width="40px" class="ml-2">
           {% endfor %}
         </div>
+
+  
+        <h4>{{game.price}} €</h4>
+        <div class="form-row text-center">
+          <div class="col-12 mt-1">
+            <form method="POST" action="/ajouterPanier">
+              <input type="hidden" name="code" value='{{game.code}}'>
+              <input type="hidden" name="slug" value='{{game.slug}}'>
+              <input type="hidden" name="price" value={{game.price}}>
+              <input type="hidden" name="name" value='{{game.name}}'>
+              <input type="hidden" name="qty" value=1>
+              <button type="submit" class="btn btn-primary">Ajouter Panier</button>
+            </form>
+          </div>
+        </div>  
+
+
       </li>
     {% endfor %}
   </ul>
