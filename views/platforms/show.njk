@@ -9,7 +9,7 @@
     <div class="row justify-content-center align-items-center">
       <h1>{{platform.name}}</h1>
 
-      {% if access %}
+      {% if isConnected %}
         <a href="/platforms/{{platform.slug}}/edit" class="btn btn-success ml-5">Edit</a>
       {% endif %}
       

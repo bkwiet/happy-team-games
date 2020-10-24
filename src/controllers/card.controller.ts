@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { MongoClient, ObjectId } from "mongodb";
 import { checkAccess } from "./connection.controller";
 import GameModel from "../models/gameModel";
@@ -24,6 +24,21 @@ export function index(mongoClient: MongoClient) {
 export async function howManyProduct(mongoClient: MongoClient): Promise<number> {
   const products = await mongoClient.db().collection("card").find().toArray();
   return products.length;
+}
+
+export function cardFollow(mongoClient: MongoClient) {
+  return async (request: Request, response: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (request.session?.accessToken) {
+        const products = await mongoClient.db().collection("card").find().toArray();
+        response.locals.card_products_number = products.length;
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      next();
+    }
+  };
 }
 
 export function addProduct(mongoClient: MongoClient, gameModel: GameModel) {
@@ -54,6 +69,7 @@ export function addProduct(mongoClient: MongoClient, gameModel: GameModel) {
 export function delProduct(mongoClient: MongoClient) {
   return async (request: Request, response: Response): Promise<void> => {
     // Add error controller > due to some missed arguments
+    console.log(request.body);
     const _id = new ObjectId(request.body.id);
     mongoClient
       .db()

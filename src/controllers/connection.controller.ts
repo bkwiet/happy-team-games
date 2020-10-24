@@ -1,6 +1,7 @@
-import OAuth2Client, { OAuth2ClientConstructor } from "@fwl/oauth2";
+import OAuth2Client, { OAuth2ClientConstructor, OAuth2Tokens } from "@fwl/oauth2";
 import * as dotenv from "dotenv";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import * as express from "express";
 
 dotenv.config();
 
@@ -21,35 +22,62 @@ const oauthClientConstructorProps: OAuth2ClientConstructor = {
   scopes: ["openid", "email", "phone"],
 };
 
+type id_token = {
+  aud: string[];
+  email: string;
+  email_verified: boolean;
+  exp: number;
+  iat: number;
+  iss: string;
+  sub: string;
+};
+
 export const oauthClient = new OAuth2Client(oauthClientConstructorProps);
 
-export function connect() {
-  return async (request: Request, response: Response): Promise<void> => {
-    // Ajouter gestion des erreurs =>
-    const oauth_URL = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
-    response.render("pages/login", { oauth_URL });
-  };
+export async function connect(request: Request, response: Response): Promise<void> {
+  const oauth_URL = await oauthClient.getAuthorizationURL().then((authUrl) => authUrl.href);
+  response.render("pages/login", { oauth_URL });
 }
 
-export function callback() {
-  return async (request: Request, response: Response): Promise<void> => {
+export async function callback(request: Request, response: Response): Promise<void> {
+  try {
     if (request.query.code) {
       const token = await oauthClient.getTokensFromAuthorizationCode(String(request.query.code));
+      const decoded = await oauthClient.verifyJWT(token.access_token, jwt_algo);
 
-      if (token.id_token) {
-        // const decodedID_Token = await oauthClient.verifyJWT(token.id_token, jwt_algo).then();
+      if (decoded) {
         if (request.session) {
+          const decoded_id_token: id_token = await oauthClient.verifyJWT(String(token.id_token), jwt_algo);
           request.session.accessToken = token.access_token;
+          if (decoded_id_token) {
+            request.session.userID = decoded_id_token.email;
+          }
         }
-        // console.log(request.session);
+        console.log(request.session?.accessToken);
         response.redirect("/");
       } else {
-        response.status(401).json({ error: "Failed connection" });
+        response.status(403).json({ error: "Unauthorized connection" });
       }
-    } else {
-      response.status(403).json({ error: "Unauthorized connection" });
     }
-  };
+  } catch (error) {
+    response.status(401).json({ message: "Unauthorized connection" });
+  }
+}
+
+export async function connectionStatus(request: Request, response: Response, next: NextFunction): Promise<void> {
+  try {
+    const decoded = await oauthClient.verifyJWT(request.session?.accessToken, jwt_algo);
+    if (decoded) {
+      response.locals.isConnected = true;
+      response.locals.userID = request.session?.userID;
+    } else {
+      response.locals.isConnected = false;
+    }
+  } catch (error) {
+    response.locals.isConnected = false;
+  } finally {
+    next();
+  }
 }
 
 export function checkLoginStatus(callback: (request: Request, response: Response) => Promise<void>) {
@@ -84,12 +112,10 @@ export function checkAccess() {
 
 // export function refreshLoginStatus() {}
 
-export function logout() {
-  return async (request: Request, response: Response): Promise<void> => {
-    if (request.session) {
-      request.session.destroy(() => response.redirect("/"));
-    } else {
-      response.redirect("/");
-    }
-  };
+export async function logout(request: Request, response: Response): Promise<void> {
+  if (request.session) {
+    request.session.destroy(() => response.redirect("/"));
+  } else {
+    response.redirect("/");
+  }
 }

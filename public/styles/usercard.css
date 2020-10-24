@@ -1,7 +1,12 @@
 img.card-img-top {
-  height: 11rem;
+  height: 17rem;
   margin-top: 0.5rem;
+}
+.card-text {
+  font-weight: bold;
 }
 .card-body {
   text-align: center;
+  height: 9rem;
+  overflow: hidden;
 }

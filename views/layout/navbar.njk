@@ -18,10 +18,12 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
-
+      <span class="navbar-text">
+        {{userID}}
+      </span>
       <li class="nav-item">
 
-      {% if access %}
+      {% if isConnected %}
         <a class="nav-link" href="/logout">Logout</a>
       {% else %}
       
@@ -29,10 +31,9 @@
       {% endif %}
       </li>
       
-    {% if access %}
+    {% if isConnected %}
       <li class="nav-item">
-        <a class="nav-link" href="/card"><img id="user_cart" src="/assets/images/cart.png" alt=""></a> 
-        {# Add the dynamic number of product in the card <span class="badge badge-light">{{many_products}}</span> #}
+        <a class="nav-link" href="/card"><img id="user_cart" class="mr-2" src="/assets/images/cart.png" alt="cart"><span class="badge badge-light">{{card_products_number}}</span></a> 
       </li>
     {% endif %}
     </ul>

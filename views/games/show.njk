@@ -18,7 +18,7 @@
 
         <h1 class="col-12 col-md-9">{{game.name}}</h1>
 
-        {% if access %}
+        {% if isConnected %}
           <a href="/games/{{game.slug}}/edit" class="btn btn-success ml-5">Edit</a>
           <form class="col-3 col-md-2 my-lg-0 mt-2 mt-md-0" action="/card/add" method="POST">
             <input class="form-control d-none" value="{{game.slug}}" type="text" name="game" aria-label="text">

@@ -27,23 +27,9 @@ dotenv.config();
 
 export function makeApp(mongoClient: MongoClient): core.Express {
   const app = express();
-
-  nunjucks.configure("views", {
-    autoescape: true,
-    express: app,
-  });
-
-  app.disable("x-powered-by");
-  app.use("/assets", express.static("public"));
-  app.use(cors());
-  app.set("view engine", "njk");
-
   const mongoStore = mongoSession(session);
-
-  if (process.env.NODE_ENV === "production") {
-    app.set("trust proxy", 1);
-  }
-
+  const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
+  const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
   const sessionParser = session({
     secret: session_secret,
     name: "happy_tg_sessionID",
@@ -59,17 +45,25 @@ export function makeApp(mongoClient: MongoClient): core.Express {
     },
   });
 
-  const platformModel = new PlatformModel(mongoClient.db().collection<Platform>("platforms"));
-  const gameModel = new GameModel(mongoClient.db().collection<Game>("games"));
+  nunjucks.configure("views", {
+    autoescape: true,
+    express: app,
+  });
+
+  if (process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+  }
+
+  app.disable("x-powered-by");
+  app.set("view engine", "njk");
+  app.use("/assets", express.static("public"));
+  app.use(cors());
+  app.use("/*", sessionParser, connection.connectionStatus);
+  app.use("/*", card.cardFollow(mongoClient));
 
   // Index / Api routes
   app.get("/", sessionParser, async (request, response) => {
-    await connection
-      .checkAccess()(request)
-      .then((result) => (access = result));
-    response.render("pages/home", {
-      access,
-    });
+    response.render("pages/home");
   });
   app.get("/api", sessionParser, async (request, response) => {
     await connection
@@ -82,99 +76,57 @@ export function makeApp(mongoClient: MongoClient): core.Express {
 
   // Login / Logout routes
 
-  app.get("/login", sessionParser, connection.connect());
-  app.get("/logout", sessionParser, connection.logout());
-  app.get("/oauth/callback", sessionParser, connection.callback());
+  app.get("/login", connection.connect);
+  app.get("/logout", connection.logout);
+  app.get("/oauth/callback", connection.callback);
 
   // Platforms routes
 
-  app.get("/platforms", sessionParser, platformsController.index(platformModel));
-  app.get("/platforms/new", sessionParser, connection.checkLoginStatus(platformsController.newPlatform()));
-  app.get("/platforms/:slug", sessionParser, platformsController.show(platformModel));
-  app.get("/platforms/:slug/edit", sessionParser, connection.checkLoginStatus(platformsController.edit(platformModel)));
+  app.get("/platforms", platformsController.index(platformModel));
+  app.get("/platforms/new", connection.checkLoginStatus(platformsController.newPlatform()));
+  app.get("/platforms/:slug", platformsController.show(platformModel));
+  app.get("/platforms/:slug/edit", connection.checkLoginStatus(platformsController.edit(platformModel)));
   app.post(
     "/platforms",
     jsonParser,
     formParser,
-    sessionParser,
     connection.checkLoginStatus(platformsController.create(platformModel)),
   );
-  app.put(
-    "/platforms/:slug",
-    jsonParser,
-    sessionParser,
-    connection.checkLoginStatus(platformsController.update(platformModel)),
-  );
-  app.post(
-    "/platforms/:slug",
-    formParser,
-    sessionParser,
-    connection.checkLoginStatus(platformsController.update(platformModel)),
-  );
-  app.delete(
-    "/platforms/:slug",
-    jsonParser,
-    sessionParser,
-    connection.checkLoginStatus(platformsController.destroy(platformModel)),
-  );
+  app.put("/platforms/:slug", jsonParser, connection.checkLoginStatus(platformsController.update(platformModel)));
+  app.post("/platforms/:slug", formParser, connection.checkLoginStatus(platformsController.update(platformModel)));
+  app.delete("/platforms/:slug", jsonParser, connection.checkLoginStatus(platformsController.destroy(platformModel)));
 
-  app.get("/platforms/:slug/games", sessionParser, gamesController.list(gameModel));
+  app.get("/platforms/:slug/games", gamesController.list(gameModel));
 
   // Games routes
 
-  app.get("/games", sessionParser, gamesController.index(gameModel));
+  app.get("/games", gamesController.index(gameModel));
   app.get("/games/new", connection.checkLoginStatus(gamesController.newGame()));
-  app.get("/games/:slug", sessionParser, gamesController.show(gameModel));
-  app.get("/games/:slug/edit", sessionParser, connection.checkLoginStatus(gamesController.edit(gameModel)));
+  app.get("/games/:slug", gamesController.show(gameModel));
+  app.get("/games/:slug/edit", connection.checkLoginStatus(gamesController.edit(gameModel)));
   app.post(
     "/games",
     jsonParser,
     formParser,
-    sessionParser,
     connection.checkLoginStatus(gamesController.create(gameModel, platformModel)),
   );
-  app.put(
-    "/games/:slug",
-    jsonParser,
-    sessionParser,
-    connection.checkLoginStatus(gamesController.update(gameModel, platformModel)),
-  );
-  app.post(
-    "/games/:slug",
-    formParser,
-    sessionParser,
-    connection.checkLoginStatus(gamesController.update(gameModel, platformModel)),
-  );
-  app.delete(
-    "/games/:slug",
-    jsonParser,
-    sessionParser,
-    connection.checkLoginStatus(gamesController.destroy(gameModel)),
-  );
+  app.put("/games/:slug", jsonParser, connection.checkLoginStatus(gamesController.update(gameModel, platformModel)));
+  app.post("/games/:slug", formParser, connection.checkLoginStatus(gamesController.update(gameModel, platformModel)));
+  app.delete("/games/:slug", jsonParser, connection.checkLoginStatus(gamesController.destroy(gameModel)));
 
   // Ecommerce routes
-  app.get("/card", sessionParser, connection.checkLoginStatus(card.index(mongoClient)));
-  app.get("/card/checkout", sessionParser, connection.checkLoginStatus(card.checkout(mongoClient)));
-  app.post(
-    "/card/add",
-    formParser,
-    sessionParser,
-    connection.checkLoginStatus(card.addProduct(mongoClient, gameModel)),
-  );
-  app.post("/card/remove", formParser, sessionParser, connection.checkLoginStatus(card.delProduct(mongoClient)));
+  app.get("/card", connection.checkLoginStatus(card.index(mongoClient)));
+  app.get("/card/checkout", connection.checkLoginStatus(card.checkout(mongoClient)));
+  app.post("/card/add", formParser, connection.checkLoginStatus(card.addProduct(mongoClient, gameModel)));
+  app.post("/card/remove", formParser, connection.checkLoginStatus(card.delProduct(mongoClient)));
 
   // Bad request routes
-  app.get("/*", sessionParser, async (request, response) => {
+  app.get("/*", async (request, response) => {
     console.log(request.path);
     if (clientWantsJson(request)) {
       response.status(404).json({ error: "Not Found" });
     } else {
-      await connection
-        .checkAccess()(request)
-        .then((result) => (access = result));
-      response.status(404).render("pages/not-found", {
-        access,
-      });
+      response.status(404).render("pages/not-found");
     }
   });
 

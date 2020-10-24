@@ -16,14 +16,16 @@
   {% for product in products %}
 
     <div class="card col-12 col-md-3 mx-2 mt-3">
+        <form class="my-lg-0 mt-2 mt-md-0" id="id-{{product.slug}}" action="/card/remove" method="POST">
+          <input class="form-control d-none" value="{{product._id}}" type="text" name="id" aria-label="text">
+          <button class="btn btn-danger btn-lg mt-2" form="id-{{product.slug}}" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification"><i class="fas fa-trash"></i></button>
+        </form>
+        <p class="card-text mt-2">Price : {{product.price }} €</p>
       <a href="/games/{{product.slug}}"><img class="card-img-top" src="{{product.cover }}""  alt="cover"></a> 
       <div class="card-body">
         <h5 class="card-title">{{product.name }}</h5>
-        <p class="card-text">Price : {{product.price }} €</p>
-        <form class="my-lg-0 mt-2 mt-md-0" action="/card/remove" method="POST">
-          <input class="form-control d-none" value="{{product._id}}" type="text" name="id" aria-label="text">
-          <button class="btn btn-danger btn-lg" type="submit" aria-expanded="false" aria-controls="btn-collapseSpecification">Remove</button>
-        <form>
+        
+        
       </div>
     </div>
     
